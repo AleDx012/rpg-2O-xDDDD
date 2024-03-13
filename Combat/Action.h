@@ -24,6 +24,4 @@ struct Action {
     {
         return this->speed < p.speed;
     }
-};
-
-#endif //RPG_ACTION_H
+}
