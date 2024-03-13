@@ -1,6 +1,5 @@
-//
-// Created by Victor Navarro on 13/02/24.
-//
+//FRANCISCO ALEJANDRO GONZALEZ HERRERA 23310145
+
 #include "Player.h"
 #include <iostream>
 #include "../Utils.h"
@@ -8,17 +7,17 @@
 using namespace std;
 using namespace combat_utils;
 
-bool compareSpeed(Enemy *a, Enemy *b) {
+bool compareSpeed(Enemy* a, Enemy* b) {
     return a->getSpeed() > b->getSpeed();
 }
 
 Player::Player(string name, int health, int attack, int defense, int speed) : Character(name, health, attack, defense,
-                                                                                        speed, true) {
+    speed, true) {
     experience = 0;
     level = 1;
 }
 
-void Player::doAttack(Character *target) {
+void Player::doAttack(Character* target) {
     int rolledAttack = getRolledAttack(getAttack());
     int trueDamage = target->getDefense() > rolledAttack ? 0 : rolledAttack - target->getDefense();
     target->takeDamage(trueDamage);
@@ -32,22 +31,27 @@ void Player::takeDamage(int damage) {
     }
 }
 
-void Player::flee(vector<Enemy *> enemies) {
+void Player::flee(vector<Enemy*> enemies) {
     std::sort(enemies.begin(), enemies.end(), compareSpeed);
-    Enemy *fastestEnemy = enemies[0];
-    bool fleed = false;
+    Enemy* fastestEnemy = enemies[0];
+    bool fled = false;
+
+    // Comparar la velocidad del jugador con la del enemigo más rápido
     if (this->getSpeed() > fastestEnemy->getSpeed()) {
-        fleed = true;
-    } else {
+        fled = true;
+    }
+    else {
+        // Si el jugador no es más rápido, tiene una pequeña posibilidad de escapar
         srand(time(NULL));
         int chance = rand() % 100;
-        cout << "chance: " << chance << endl;
-        fleed = chance > 99;
+        cout << "Chance to escape: " << chance << "%" << endl;
+        fled = chance > 90; // Por ejemplo, el jugador tiene un 10% de posibilidades de escapar
     }
 
-    this->fleed = fleed;
-}
-
+    if (fled) {
+        cout << "You managed to escape!" << endl;
+    }
+   
 void Player::emote() {
     cout << "Jokes on you" << endl;
 }
@@ -68,7 +72,7 @@ void Player::gainExperience(int exp) {
     }
 }
 
-Character *Player::getTarget(vector<Enemy *> enemies) {
+Character* Player::getTarget(vector<Enemy*> enemies) {
     cout << "Choose a target" << endl;
     int targetIndex = 0;
     for (int i = 0; i < enemies.size(); i++) {
@@ -79,39 +83,37 @@ Character *Player::getTarget(vector<Enemy *> enemies) {
     return enemies[targetIndex];
 }
 
-Action Player::takeAction(vector<Enemy *> enemies) {
+Action Player::takeAction(vector<Enemy*> enemies) {
     int option = 0;
     cout << "Choose an action" << endl;
     cout << "1. Attack" << endl;
     cout << "2. Flee" << endl;
     cin >> option;
-    Character *target = nullptr;
+    Character* target = nullptr;
 
     //Esta variable guarda
     //1. Que voy a hacer?
     //2. Con que velocidad/prioridad?
     Action myAction;
-    //2.
     myAction.speed = this->getSpeed();
     myAction.subscriber = this;
 
     switch (option) {
-        case 1:
-            target = getTarget(enemies);
-            myAction.target = target;
-            //1.
-            myAction.action = [this, target]() {
-                doAttack(target);
+    case 1:
+        target = getTarget(enemies);
+        myAction.target = target;
+        myAction.action = [this, target]() {
+            doAttack(target);
             };
-            break;
-        case 2:
-            myAction.action = [this, enemies]() {
-                flee(enemies);
+        break;
+    case 2:
+        myAction.action = [this, enemies]() {
+            flee(enemies);
             };
-            break;
-        default:
-            cout << "Invalid option" << endl;
-            break;
+        break;
+    default:
+        cout << "Invalid option" << endl;
+        break;
     }
 
     return myAction;

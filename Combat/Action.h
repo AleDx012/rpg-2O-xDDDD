@@ -1,7 +1,4 @@
-//
-// Created by Victor Navarro on 26/02/24.
-//
-
+//Francisco Alejandro 23310145
 #ifndef RPG_ACTION_H
 #define RPG_ACTION_H
 #include<functional>
@@ -21,7 +18,7 @@ struct Action {
         subscriber = _subscriber;
         target = _target;
     }
-    Action(){};
+    Action() {};
 
     bool operator<(const Action& p) const
     {

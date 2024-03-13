@@ -1,6 +1,4 @@
-//
-// Created by Victor Navarro on 13/02/24.
-//
+//Francisco Alejandro Gonzalez Herrera 23310145
 #include "Character.h"
 
 Character::Character(string _name, int _health, int _attack, int _defense, int _speed, bool _isPlayer) {
