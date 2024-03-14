@@ -94,7 +94,6 @@ Action Player::takeAction(const vector<Enemy *>& enemies) {
     // 1. ¿Qué voy a hacer?
     // 2. ¿Con qué velocidad/prioridad?
     Action myAction;
-    // 2.
     myAction.speed = this->getSpeed();
     myAction.subscriber = this;
 
