@@ -75,7 +75,7 @@ Action Enemy::takeAction(const vector<Player *>& players) {
     myAction.speed = getSpeed();
     myAction.subscriber = this;
     Character* target = nullptr;
-    if (getHealth() <= (getHealth() * 0.15)){ // Cambiado el número por el valor decimal
+    if (getHealth() <= (getHealth() * 0.15)){ 
         myAction.action = [this, players]() {
             flee(players);
         };
