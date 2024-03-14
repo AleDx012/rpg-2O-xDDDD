@@ -49,7 +49,7 @@ void Player::flee(vector<Enemy *> enemies) {
         cout << "You managed to escape!" << endl;
     } else {
         cout << "You couldn't escape!" << endl;
-        // Aquí podrías implementar acciones adicionales, como recibir un ataque de los enemigos
+        // implementar acciones adicionales, como recibir un ataque de los enemigos
     }
 }
 
