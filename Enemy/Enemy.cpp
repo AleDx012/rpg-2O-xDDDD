@@ -2,13 +2,16 @@
 #include "Enemy.h"
 #include <iostream>
 
-
 using namespace std;
 
-//TODO: Check the circular dependency
+// Función para obtener el ataque aleatorio dentro del rango
 int getRolledAttack(int attack) {
-    int lowerLimit = attack * .80;
+    int lowerLimit = attack * 0.80; 
     return (rand() % (attack - lowerLimit)) + lowerLimit;
+}
+
+bool compareSpeed(Player *a, Player *b) {
+    return a->getSpeed() > b->getSpeed();
 }
 
 Enemy::Enemy(string name, int health, int attack, int defense, int speed) : Character(name, health, attack, defense, speed, false) {
@@ -23,56 +26,60 @@ void Enemy::doAttack(Character *target) {
 void Enemy::takeDamage(int damage) {
     setHealth(getHealth() - damage);
     if(getHealth() <= 0) {
-        cout<<getName()<<" ha muerto"<<endl;
+        cout << getName() << " has died" << endl;
     }
     else {
-        cout<<getName()<<" ha recibido " << damage << " de daño" << endl;
+        cout << getName() << " has taken " << damage << " damage" << endl;
     }
 }
 
-Character* Enemy::getTarget(vector<Player *> teamMembers) {
-    
+void Enemy::flee(vector<Player *> partyMembers) {
+    std::sort(partyMembers.begin(), partyMembers.end(), compareSpeed);
+    Player *fastestPlayer = partyMembers[0];
+    bool fled = false;
+    if (this->getSpeed() > fastestPlayer->getSpeed()) {
+        fled = true;
+    } else {
+        srand(time(nullptr));
+        int chance = rand() % 100;
+        cout << "Chance to escape: " << chance << "%" << endl;
+        fled = chance > 95;
+    }
+
+    this->fleed = fled; // Cambiado el nombre de la variable de "fleed" a "fled"
+}
+
+Character* Enemy::getTarget(vector<Player *> partyMembers) {
+    // Miembro del equipo con menor vida
     int targetIndex = 0;
     int lowestHealth = INT_MAX;
-    for(int i=0; i < teamMembers.size(); i++) {
-        if(teamMembers[i]->getHealth() < lowestHealth) {
-            lowestHealth = teamMembers[i]->getHealth();
+    for(int i=0; i < partyMembers.size(); i++) {
+        if(partyMembers[i]->getHealth() < lowestHealth) {
+            lowestHealth = partyMembers[i]->getHealth();
             targetIndex = i;
         }
     }
 
-    return teamMembers[targetIndex];
+    return partyMembers[targetIndex];
 }
 
-Action Enemy::takeAction(vector<Player *> player) {
+
+Action Enemy::takeAction(const vector<Player *>& players) {
     Action myAction;
     myAction.speed = getSpeed();
     myAction.subscriber = this;
-    Character* target = getTarget(player);
-    
-    // se calcula el porcentaje de vida actual.
-    double currentHealthPercent = static_cast<double>(getHealth()) / static_cast<double>(getMaxHealth());
-
-    // Comprobar si el enemigo tiene menos del 15% de vida
-    if (currentHealthPercent < 0.15) {
-        // Generar un número aleatorio entre 0 y 99 (inclusive)
-        int escapeChance = rand() % 100;
-        
-        // Si el número generado está en el rango del 5% el enemigo va escapar
-        if (escapeChance < 5) {
-            cout << getName() << " ha escapado." << endl;
-            myAction.action = []() {
-                // Acción de escape: no hace nada
-            };
-            return myAction;
-        }
+    Character* target = nullptr;
+    if (getHealth() <= (getHealth() * 0.15)){ // Cambiado el número por el valor decimal
+        myAction.action = [this, players]() {
+            flee(players);
+        };
+    } else {
+        target = getTarget(players);
+        myAction.target = target;
+        myAction.action = [this, target]() {
+            doAttack(target);
+        };
     }
-
-    // Si no se escapa va realizarse el ataque normalmente
-    myAction.target = target;
-    myAction.action = [this, target]() {
-        doAttack(target);
-    };
 
     return myAction;
 }
