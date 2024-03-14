@@ -1,5 +1,4 @@
-//FRANCISCO ALEJANDRO GONZALEZ HERRERA 23310145
-
+//FRANCISCO ALEJANDRO GONZALEZ HERRERA 23310145 
 #include "Player.h"
 #include <iostream>
 #include "../Utils.h"
@@ -36,12 +35,12 @@ void Player::flee(vector<Enemy*> enemies) {
     Enemy* fastestEnemy = enemies[0];
     bool fled = false;
 
-    // Comparar la velocidad del jugador con la del enemigo más rápido
+    // Comparar la velocidad del jugador con la del enemigo mÃ¡s rÃ¡pido
     if (this->getSpeed() > fastestEnemy->getSpeed()) {
         fled = true;
     }
     else {
-        // Si el jugador no es más rápido, tiene una pequeña posibilidad de escapar
+        // Si el jugador no es mÃ¡s rÃ¡pido, tiene una pequeÃ±a posibilidad de escapar
         srand(time(NULL));
         int chance = rand() % 100;
         cout << "Chance to escape: " << chance << "%" << endl;
