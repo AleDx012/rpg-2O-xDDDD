@@ -38,9 +38,9 @@ void Enemy::takeDamage(int damage) {
 }
 
 // método para que el enemigo huya del combate
-void Enemy::flee(vector<Player *> partyMembers) {
-    std::sort(partyMembers.begin(), partyMembers.end(), compareSpeed);
-    Player *fastestPlayer = partyMembers[0];
+void Enemy::flee(vector<Player *> TeamMembers) {
+    std::sort(TeamMembers.begin(), TeamMembers.end(), compareSpeed);
+    Player *fastestPlayer = TeamMembers[0];
     bool huyo = false;
     if (this->getSpeed() > fastestPlayer->getSpeed()) {
         huyo = true;
@@ -55,18 +55,18 @@ void Enemy::flee(vector<Player *> partyMembers) {
 }
 
 // Método para seleccionar un objetivo para atacar
-Character* Enemy::getTarget(vector<Player *> partyMembers) {
+Character* Enemy::getTarget(vector<Player *> TeamMembers) {
     // Jugador del equipo con menos vida
     int targetIndex = 0;
     int lowestHealth = INT_MAX;
-    for(int i=0; i < partyMembers.size(); i++) {
-        if(partyMembers[i]->getHealth() < lowestHealth) {
-            lowestHealth = partyMembers[i]->getHealth();
+    for(int i=0; i < TeamMembers.size(); i++) {
+        if(TeamMembers[i]->getHealth() < lowestHealth) {
+            lowestHealth = TeamMembers [i]->getHealth();
             targetIndex = i;
         }
     }
 
-    return partyMembers[targetIndex];
+    return TeamMembers[targetIndex];
 }
 
 // Método para que el enemigo realice una acción en el combate.
