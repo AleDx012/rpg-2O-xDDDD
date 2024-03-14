@@ -37,7 +37,7 @@ void Enemy::takeDamage(int damage) {
     }
 }
 
-// enemigo huya del combate
+// método para que el enemigo huya del combate
 void Enemy::flee(vector<Player *> partyMembers) {
     std::sort(partyMembers.begin(), partyMembers.end(), compareSpeed);
     Player *fastestPlayer = partyMembers[0];
